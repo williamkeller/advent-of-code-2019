@@ -1,0 +1,6 @@
+#!/bin/bash
+# Script to keep my own repository and the one being run by Allen in sync.
+
+PROJ_DIR=/Users/william/Projects/advent/2019
+
+rsync -ad --exclude=node_modules --exclude=.git --delete $PROJ_DIR/ $PROJ_DIR/../Advent/2019/William/
