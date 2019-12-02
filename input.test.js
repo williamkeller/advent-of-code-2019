@@ -11,7 +11,7 @@ describe('Input Library', () => {
           done()
       }
 
-      input.readByLineAsync('./test_fixtures/data_as_lines.txt', callback)
+      input.readByLine('./test_fixtures/data_as_lines.txt', callback)
     })
 
     test('receives a null terminator', (done) => {
@@ -21,7 +21,7 @@ describe('Input Library', () => {
           done()
       }
 
-      input.readByLineAsync('./test_fixtures/data_as_lines.txt', callback)
+      input.readByLine('./test_fixtures/data_as_lines.txt', callback)
     })
   })
 })

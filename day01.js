@@ -16,7 +16,7 @@ module.exports = {
   puzzle: function(calculator, callback) {
     let total_fuel = 0
 
-    input.readByLineAsync('data/day01_input.txt', (mass) => {
+    input.readByLine('data/day01_input.txt', (mass) => {
       if(mass !== null) {
         total_fuel += calculator(mass)
       }
