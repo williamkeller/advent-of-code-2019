@@ -3,7 +3,7 @@ const readline = require('readline')
 
 module.exports = {
 
-  readInputFile(filename, callback) {
+  readByLineAsync: function(filename, callback) {
     let rl = readline.createInterface({
       input: fs.createReadStream(filename)
     })

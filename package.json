@@ -4,6 +4,7 @@
   "description": "Node project for the Advent of Code 2019",
   "main": "index.js",
   "scripts": {
+    "start": "node_modules/.bin/node ",
     "test": "node_modules/.bin/jest"
   },
   "author": "",

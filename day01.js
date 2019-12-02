@@ -1,4 +1,4 @@
-const utils = require('./utils')
+const input = require('./input')
 
 module.exports = {
   fuel_for_mass: function(mass) {
@@ -16,7 +16,7 @@ module.exports = {
   puzzle: function(calculator, callback) {
     let total_fuel = 0
 
-    utils.readInputFile('data/day01_input.txt', (mass) => {
+    input.readByLineAsync('data/day01_input.txt', (mass) => {
       if(mass !== null) {
         total_fuel += calculator(mass)
       }
