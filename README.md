@@ -10,7 +10,7 @@ This means that earlier solutions may be refactored in light of new ideas in lat
 refactor without tests, so those need to be added.
 
 It also means that code is likely to get larger before the common features can be extracted. That's to be
-expected. You can't eliminate boilerplates until you identify boilerplates. That means my first pass at a
+expected. You can't eliminate boilerplates until you identify boilerplates. My first pass at a
 puzzle might be very small, then get larger as I make it more "correct". It's possible I'm overthinking this.
 
 
@@ -18,7 +18,7 @@ puzzle might be very small, then get larger as I make it more "correct". It's po
 
 I don't know why you'd want to. Maybe you like pain as well...
 
-First off, install the dependencies with `npm init`
+First off, install the dependencies with `npm install`
 
 To run a specific day's puzzle, do `node dayxx.js` (where xx is the day)
 
