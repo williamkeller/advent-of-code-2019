@@ -39,7 +39,7 @@ module.exports = {
       ip += 4
     }
     return data[0]
-  },
+  }
 }
 
 if(process.argv[1] === __filename) {

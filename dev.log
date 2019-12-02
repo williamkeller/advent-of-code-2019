@@ -1,3 +1,7 @@
+02 - Got the first puzzle done in 12 minutes, and was already in 935th place. There are some crazy smart
+people out there. Or cheaters. But I'd rather think I'm competing against bright people than dishonest ones.
+Nothing new in this iteration. I need to fill out index.js to run all of the programs.
+
 01 - Started off with Ruby, which gave a quick, tight solution, then switched over to Node because I'm using
 that an awful lot these days and there are definitely some places to gain some efficiencies. Got jest setup
 for testing. I think I may make a gulp recipe (or just a dumb shell script) to spit out all of the files and
