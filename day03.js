@@ -46,6 +46,17 @@ export function buildCellList(cmds) {
   return cells
 }
 
+export function intersect(arr1, arr2, compare_method) {
+  let intersections = []
+  for(let a1 of arr1) {
+    for(let a2 of arr2) {
+      if(compare_method(a1, a2) === true)
+        intersections.push([a1[0], a1[1], a1[2] + a2[2]])
+    }
+  }
+  return intersections
+}
+
 if(process.argv[1] === __filename) {
   let lines = fs.readFileSync('data/day03_input.txt', 'utf8').split('\n')
   let wire1 = lines[0]
@@ -59,22 +70,15 @@ if(process.argv[1] === __filename) {
 
   let cells1 = buildCellList(wire1)
   let cells2 = buildCellList(wire2)
-  let count = 0
 
-  let intersections = []
-  cells1.forEach((cell1) => {
-    cells2.forEach((cell2) => {
-      if(cell1[0] === cell2[0] && cell1[1] === cell2[1]) {
-        count += 1
-        intersections.push([cell1[0], cells1[1], cell1[2] + cell2[2]])
-      }
-    })
+  let intersections = intersect(cells1, cells2, (c1, c2) => {
+    return (c1[0] === c2[0] && c1[1] === c2[1])
   })
+
 
   intersections.forEach((intersect) => {
     console.log(`${intersect[2]}`)
   })
-  // console.log(intersections)
 }
 
 

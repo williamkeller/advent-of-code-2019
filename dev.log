@@ -1,3 +1,11 @@
+03 - This one stumped me for a little bit, in part because the array intersection piece ran so slowly. It was
+taking 150 seconds per run to finish, which made incremental repl coding not easy. There is a need for a
+generalized array intersection method, but since my data items were themselves arrays, that might not work.
+
+Fixed the language server for javascript in vim, which isn't part of this repo, but will still be helpful.
+
+Still need to write tests for this code, but it's been a long day already, and I'm just not feeling it.
+
 02 - Got the first puzzle done in 12 minutes, and was already in 935th place. There are some crazy smart
 people out there. Or cheaters. But I'd rather think I'm competing against bright people than dishonest ones.
 Nothing new in this iteration. I need to fill out index.js to run all of the programs.
