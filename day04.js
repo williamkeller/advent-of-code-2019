@@ -30,7 +30,6 @@ export function isValidPassword1(pwd) {
 }
 
 export function isValidPassword2(pwd) {
-  let adjCount = 0
   let adjCounts = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
   for(let i = 0; i < 5; i++) {
@@ -39,7 +38,6 @@ export function isValidPassword2(pwd) {
     }
     if(parseInt(pwd[i]) == parseInt(pwd[i + 1])) {
       adjCounts[pwd[i]] += 1
-      adjCount += 1
     }
   }
 
