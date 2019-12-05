@@ -1,122 +1,191 @@
 const util = require('util')
 const fs = require('fs')
 
-export function interpreter(data, input_buffer) {
+export function interpreter(data, input_buffer, callback) {
   let ip = 0
   let input_buffer_index = 0
   let running = true
 
-  let panic_count = 0
-
   while(running) {
-    panic_count += 1
-    if(panic_count > 100)
-      break
+    let opcode = data[ip]
 
-    let op = data[ip]
-
-    let opcode
-    let m1
-    let m2
-    let m3
-
-    if(op === 99) {
-      running = false
-      break
-    }
-
-    if(op < 10 ) {
-      opcode = op
-      m1 = 0
-      m2 = 0
-      m3 = 0
-    }
-    else {
-      let s = op.toString().split('').reverse()
-      opcode = parseInt(s[0])
-      m1 = parseInt(s[2])
-      m2 = parseInt(s[3])
-      m3 = parseInt(s[4])
-
-    }
-
-    // console.log(`opcode  ${opcode}  ${m1} ${m2} ${m3}`)
-
-
-    // let addr1 = data[ip + 1]
-    // let addr2 = data[ip + 2]
-    // let addr3 = data[ip + 3]
-    // let arg1, arg2, arg3
-
-    let arg1 = data[ip + 1]
-    let arg2 = data[ip + 2]
-    let arg3 = data[ip + 3]
-
-
-    // if(m1)
-    //   arg1 = data[ip + 1]
-    // else
-    //   arg1 = addr1
-
-    // if(m2)
-    //   arg2 = data[ip + 2]
-    // else
-    //   arg2 = addr2
-
-    // if(m3)
-    //   arg3 = data[ip + 3]
-    // else
-    //   arg3 = addr3
-
-    // console.log(`args  ${arg1} ${arg2} ${arg3}`)
     switch(opcode) {
-      case 1:
-        data[arg3] = (m1 ? arg1 : data[arg1] ) +
-          (m2 ? arg2 : data[arg2])
+      case 99:
+        running = false
+        break
+
+      case 1:  // ADD ind ind ind
+        data[data[ip + 3]] = data[data[ip + 1]] + data[data[ip + 2]]
         ip += 4
         break
-      case 2:
-        data[arg3] = (m1 ? arg1 : data[arg1]) *
-          (m2 ? arg2 : data[arg2])
+      case 101: // ADD dir ind ind
+        data[data[ip + 3]] = data[ip + 1] + data[data[ip + 2]]
         ip += 4
         break
-      case 3:
-        data[arg1] = input_buffer[input_buffer_index]
+      case 1001: // ADD ind dir ind
+        data[data[ip + 3]] = data[data[ip + 1]] + data[ip + 2]
+        ip += 4
+        break
+      case 1101: // ADD dir dir ind
+        data[data[ip + 3]] = data[ip + 1] + data[ip + 2]
+        ip += 4
+        break
+
+      case 2:  // MULT ind ind ind
+        data[data[ip + 3]] = data[data[ip + 1]] * data[data[ip + 2]]
+        ip += 4
+        break
+      case 102: // MULT dir ind ind
+        data[data[ip + 3]] =  data[ip + 1] * data[data[ip + 2]]
+        ip += 4
+        break
+      case 1002: // MULT ind dir ind
+        data[data[ip + 3]] = data[data[ip + 1]] * data[ip + 2]
+        ip += 4
+        break
+      case 1102: // MULT dir dir ind
+        data[data[ip + 3]] = data[ip + 1] * data[ip + 2]
+        ip += 4
+        break
+
+      case 3:  // IN ind
+        data[data[ip + 1]] = input_buffer[input_buffer_index]
         input_buffer_index += 1
         ip += 2
         break
-      case 4:
-        console.log(m1 ? arg1 : data[arg1])
-        // console.log(`ip=${ip}`)
-        // console.log(data.join(','))
+
+      case 4:  // OUT ind
+        callback(data[data[ip + 1]])
         ip += 2
         break
+      case 104:  // OUT dir
+        callback(data[ip + 1])
+        ip += 2
+        break
+
+      case 5:  // JT ind ind
+        if(data[data[ip + 1]] != 0)
+          ip = data[data[ip + 2]]
+        else
+          ip += 3
+        break
+      case 105:  // JT dir ind
+        if(data[ip + 1] != 0)
+          ip = data[data[ip + 2]]
+        else
+          ip += 3
+        break
+      case 1005:  // JT ind dir
+        if(data[data[ip + 1]] != 0)
+          ip = data[ip + 2]
+        else
+          ip += 3
+        break
+      case 1105:  // JT dir dir
+        if(data[ip + 1] != 0)
+          ip = data[ip + 2]
+        else
+          ip += 3
+        break
+
+      case 6:  // JF ind ind
+        if(data[data[ip + 1]] == 0)
+          ip = data[data[ip + 2]]
+        else
+          ip += 3
+        break
+      case 106:  // JF dir ind
+        if(data[ip + 1] == 0)
+          ip = data[data[ip + 2]]
+        else
+          ip += 3
+        break
+      case 1006:  // JF ind dir
+        if(data[data[ip + 1]] == 0)
+          ip = data[ip + 2]
+        else
+          ip += 3
+        break
+      case 1106:  // JF dir dir
+        if(data[ip + 1] == 0)
+          ip = data[ip + 2]
+        else
+          ip += 3
+        break
+
+      case 7:  // LT ind ind ind
+        if(data[data[ip + 1]] < data[data[ip + 2]])
+          data[ip + 3] = 1
+        else 
+          data[ip + 3] = 0
+        ip += 4
+        break
+      case 107:  // LT dir ind ind
+        if(data[ip + 1] < data[data[ip + 2]])
+          data[ip + 3] = 1
+        else 
+          data[ip + 3] = 0
+        ip += 4
+        break
+      case 1007:  // LT ind dir ind
+        if(data[data[ip + 1]] < data[ip + 2])
+          data[ip + 3] = 1
+        else 
+          data[ip + 3] = 0
+        ip += 4
+        break
+      case 1107:  // LT dir dir ind
+        if(data[ip + 1] < data[ip + 2])
+          data[ip + 3] = 1
+        else 
+          data[ip + 3] = 0
+        ip += 4
+        break
+
+      case 8:  // EQ ind ind ind
+        if(data[data[ip + 1]] == data[data[ip + 2]])
+          data[data[ip + 3]] = 1
+        else 
+          data[data[ip + 3]] = 0
+        ip += 4
+        break
+      case 108:  // EQ dir ind ind
+        if(data[ip + 1] == data[data[ip + 2]])
+          data[data[ip + 3]] = 1
+        else 
+          data[data[ip + 3]] = 0
+        ip += 4
+        break
+      case 1008:  // EQ ind dir ind
+        if(data[data[ip + 1]] == data[ip + 2])
+          data[data[ip + 3]] = 1
+        else 
+          data[data[ip + 3]] = 0
+        ip += 4
+        break
+      case 1108:  // EQ dir dir ind
+        if(data[ip + 1] == data[ip + 2])
+          data[data[ip + 3]] = 1
+        else
+          data[data[ip + 3]] = 0
+        ip += 4
+        break
+
+      default:
+        console.log(`Unrecognized opcode ${opcode}!`)
     }
 
     // console.log(util.inspect(data.slice(0, 20)))
     if(running == false)
       break
   }
-  return data[0]
 }
 
 
 if(process.argv[1] === __filename) {
   const data = fs.readFileSync('data/day05_input.txt', 'utf8').split(',').map(x => parseInt(x))
 
-  interpreter(data, [1])
-  // interpreter([3,0,4,0,99], [1])
-  // let result = interpreter([...data], 12, 2)
-  // console.log(result)
-
-  // for(let i = 0; i < 100; i++) {
-  //   for(let j = 0; j < 100; j++) {
-  //     let result = interpreter([...data], i, j)
-  //     if(result === 19690720) {
-  //       console.log(`noun = ${i}, verb = ${j}`)
-  //     }
-  //   }
-  // }
+  interpreter(data, [9], out => console.log(out))
 }
 
 
