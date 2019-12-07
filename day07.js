@@ -15,10 +15,42 @@ export class VM {
     return this._data
   }
 
+  get ip() {
+    return this._ip
+  }
+
+  set ip(value) {
+    this._ip = value
+  }
+
+  setIp(value) {
+    this._ip = value
+  }
+
+  incIp(value) {
+    this._ip += value
+  }
+
+  pos(offset) {
+    return this.data[this.data[this.ip + offset]]
+  }
+
+  imm(offset) {
+    return this.data[this.ip + offset]
+  }
+
+  setDataPos(loc, value) {
+    this._data[this._data[this.ip + loc]] = value
+  }
+
+  setDataImm(loc, value) {
+    this._data[loc] = value
+  }
+
+
   run() {
     this._running = true
     while(this._running == true) {
-      // console.log(this._data.join(','))
       this.step()
     }
   }
@@ -42,77 +74,77 @@ export class VM {
         this._running = false
         break
 
-      case 1:  // ADD ind ind ind
-        this._data[this._data[this._ip + 3]] = this._data[this._data[this._ip + 1]] + this._data[this._data[this._ip + 2]]
-        this._ip += 4
+      case 1:  // ADD pos pos pos
+        this.setDataPos(3, this.pos(1) + this.pos(2))
+        this.incIp(4)
         break
-      case 101: // ADD dir ind ind
-        this._data[this._data[this._ip + 3]] = this._data[this._ip + 1] + this._data[this._data[this._ip + 2]]
-        this._ip += 4
+      case 101: // ADD imm pos pos
+        this.setDataPos(3, this.imm(1) + this.pos(2))
+        this.incIp(4)
         break
-      case 1001: // ADD ind dir ind
-        this._data[this._data[this._ip + 3]] = this._data[this._data[this._ip + 1]] + this._data[this._ip + 2]
-        this._ip += 4
+      case 1001: // ADD pos imm pos
+        this.setDataPos(3, this.pos(1) + this.imm(2))
+        this.incIp(4)
         break
-      case 1101: // ADD dir dir ind
-        this._data[this._data[this._ip + 3]] = this._data[this._ip + 1] + this._data[this._ip + 2]
-        this._ip += 4
-        break
-
-      case 2:  // MULT ind ind ind
-        this._data[this._data[this._ip + 3]] = this._data[this._data[this._ip + 1]] * this._data[this._data[this._ip + 2]]
-        this._ip += 4
-        break
-      case 102: // MULT dir ind ind
-        this._data[this._data[this._ip + 3]] =  this._data[this._ip + 1] * this._data[this._data[this._ip + 2]]
-        this._ip += 4
-        break
-      case 1002: // MULT ind dir ind
-        this._data[this._data[this._ip + 3]] = this._data[this._data[this._ip + 1]] * this._data[this._ip + 2]
-        this._ip += 4
-        break
-      case 1102: // MULT dir dir ind
-        this._data[this._data[this._ip + 3]] = this._data[this._ip + 1] * this._data[this._ip + 2]
-        this._ip += 4
+      case 1101: // ADD imm imm pos
+        this.setDataPos(3, this.imm(1) + this.imm(2))
+        this.incIp(4)
         break
 
-      case 3:  // IN ind
-        this._data[this._data[this._ip + 1]] = this._input_callback()
-        this._ip += 2
+      case 2:  // MULT pos pos pos
+        this.setDataPos(3, this.pos(1) * this.pos(2))
+        this.incIp(4)
+        break
+      case 102: // MULT imm pos pos
+        this.setDataPos(3, this.imm(1) * this.pos(2))
+        this.incIp(4)
+        break
+      case 1002: // MULT pos imm pos
+        this.setDataPos(3, this.pos(1) * this.imm(2))
+        this.incIp(4)
+        break
+      case 1102: // MULT imm imm pos
+        this.setDataPos(3, this.imm(1) * this.imm(2))
+        this.incIp(4)
         break
 
-      case 4:  // OUT ind
-        this._output_callback(this._data[this._data[this._ip + 1]])
-        this._ip += 2
+      case 3:  // IN pos
+        this.setDataPos(1, this._input_callback())
+        this.incIp(2)
         break
-      case 104:  // OUT dir
-        this._output_callback(this._data[this._ip + 1])
-        this._ip += 2
+
+      case 4:  // OUT pos
+        this._output_callback(this.pos(1))
+        this.incIp(2)
+        break
+      case 104:  // OUT imm
+        this._output_callback(this.imm(1))
+        this.incIp(2)
         break
 
       case 5:  // JT pos pos
         if(this._data[this._data[this._ip + 1]] != 0)
-          this._ip = this._data[this._data[this._ip + 2]]
+          this.setIp(this._data[this._data[this._ip + 2]])
         else
-          this._ip += 3
+          this.incIp(3)
         break
       case 105:  // JT imm pos
-        if(this._data[this._ip + 1] != 0)
-          this._ip = this._data[this._data[this._ip + 2]]
+         if(this.imm(1) != 0)
+           this.setIp(this.pos(2))
         else
-          this._ip += 3
+          this.incIp(3)
         break
       case 1005:  // JT pos imm
-        if(this._data[this._data[this._ip + 1]] != 0)
-          this._ip = this._data[this._ip + 2]
+        if(this.pos(1) != 0)
+          this.setIp(this.imm(2))
         else
-          this._ip += 3
+          this.incIp(3)
         break
       case 1105:  // JT imm imm
-        if(this._data[this._ip + 1] != 0)
-          this._ip = this._data[this._ip + 2]
+        if(this.imm(1) != 0)
+          this.setIp(this.imm(2))
         else
-          this._ip += 3
+          this.incIp(3)
         break
 
       case 6:  // JF pos pos
