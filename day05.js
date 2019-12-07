@@ -63,107 +63,107 @@ export function interpreter(data, input_buffer, callback) {
         ip += 2
         break
 
-      case 5:  // JT ind ind
+      case 5:  // JT pos pos
         if(data[data[ip + 1]] != 0)
           ip = data[data[ip + 2]]
         else
           ip += 3
         break
-      case 105:  // JT dir ind
+      case 105:  // JT imm pos
         if(data[ip + 1] != 0)
           ip = data[data[ip + 2]]
         else
           ip += 3
         break
-      case 1005:  // JT ind dir
+      case 1005:  // JT pos imm
         if(data[data[ip + 1]] != 0)
           ip = data[ip + 2]
         else
           ip += 3
         break
-      case 1105:  // JT dir dir
+      case 1105:  // JT imm imm
         if(data[ip + 1] != 0)
           ip = data[ip + 2]
         else
           ip += 3
         break
 
-      case 6:  // JF ind ind
+      case 6:  // JF pos pos
         if(data[data[ip + 1]] == 0)
           ip = data[data[ip + 2]]
         else
           ip += 3
         break
-      case 106:  // JF dir ind
+      case 106:  // JF imm pos
         if(data[ip + 1] == 0)
           ip = data[data[ip + 2]]
         else
           ip += 3
         break
-      case 1006:  // JF ind dir
+      case 1006:  // JF pos imm
         if(data[data[ip + 1]] == 0)
           ip = data[ip + 2]
         else
           ip += 3
         break
-      case 1106:  // JF dir dir
+      case 1106:  // JF imm imm
         if(data[ip + 1] == 0)
           ip = data[ip + 2]
         else
           ip += 3
         break
 
-      case 7:  // LT ind ind ind
+      case 7:  // LT pos pos
         if(data[data[ip + 1]] < data[data[ip + 2]])
-          data[ip + 3] = 1
-        else 
-          data[ip + 3] = 0
+          data[data[ip + 3]] = 1
+        else
+          data[data[ip + 3]] = 0
         ip += 4
         break
-      case 107:  // LT dir ind ind
+      case 107:  // LT imm pos
         if(data[ip + 1] < data[data[ip + 2]])
-          data[ip + 3] = 1
-        else 
-          data[ip + 3] = 0
+          data[data[ip + 3]] = 1
+        else
+          data[data[ip + 3]] = 0
         ip += 4
         break
-      case 1007:  // LT ind dir ind
+      case 1007:  // LT pos imm
         if(data[data[ip + 1]] < data[ip + 2])
-          data[ip + 3] = 1
+          data[data[ip + 3]] = 1
         else 
-          data[ip + 3] = 0
+          data[data[ip + 3]] = 0
         ip += 4
         break
-      case 1107:  // LT dir dir ind
+      case 1107:  // LT imm imm
         if(data[ip + 1] < data[ip + 2])
-          data[ip + 3] = 1
+          data[data[ip + 3]] = 1
         else 
-          data[ip + 3] = 0
+          data[data[ip + 3]] = 0
         ip += 4
         break
 
-      case 8:  // EQ ind ind ind
+      case 8:  // EQ pos pos pos
         if(data[data[ip + 1]] == data[data[ip + 2]])
           data[data[ip + 3]] = 1
         else 
           data[data[ip + 3]] = 0
         ip += 4
         break
-      case 108:  // EQ dir ind ind
+      case 108:  // EQ imm pos pos
         if(data[ip + 1] == data[data[ip + 2]])
           data[data[ip + 3]] = 1
         else 
           data[data[ip + 3]] = 0
         ip += 4
         break
-      case 1008:  // EQ ind dir ind
+      case 1008:  // EQ pos imm pos
         if(data[data[ip + 1]] == data[ip + 2])
           data[data[ip + 3]] = 1
-        else 
+        else
           data[data[ip + 3]] = 0
         ip += 4
         break
-      case 1108:  // EQ dir dir ind
+      case 1108:  // EQ imm imm pos
         if(data[ip + 1] == data[ip + 2])
           data[data[ip + 3]] = 1
         else
@@ -175,7 +175,6 @@ export function interpreter(data, input_buffer, callback) {
         console.log(`Unrecognized opcode ${opcode}!`)
     }
 
-    // console.log(util.inspect(data.slice(0, 20)))
     if(running == false)
       break
   }
@@ -185,7 +184,7 @@ export function interpreter(data, input_buffer, callback) {
 if(process.argv[1] === __filename) {
   const data = fs.readFileSync('data/day05_input.txt', 'utf8').split(',').map(x => parseInt(x))
 
-  interpreter(data, [9], out => console.log(out))
+  interpreter(data, [5], out => console.log(out))
 }
 
 
