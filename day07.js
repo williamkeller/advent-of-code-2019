@@ -148,28 +148,28 @@ export class VM {
         break
 
       case 6:  // JF pos pos
-        if(this._data[this._data[this._ip + 1]] == 0)
-          this._ip = this._data[this._data[this._ip + 2]]
+        if(this.pos(1) == 0)
+          this.setIp(this.pos(2))
         else
-          this._ip += 3
+          this.incIp(3)
         break
       case 106:  // JF imm pos
         if(this._data[this._ip + 1] == 0)
           this._ip = this._data[this._data[this._ip + 2]]
         else
-          this._ip += 3
+          this.incIp(3)
         break
       case 1006:  // JF pos imm
         if(this._data[this._data[this._ip + 1]] == 0)
           this._ip = this._data[this._ip + 2]
         else
-          this._ip += 3
+          this.incIp(3)
         break
       case 1106:  // JF imm imm
         if(this._data[this._ip + 1] == 0)
           this._ip = this._data[this._ip + 2]
         else
-          this._ip += 3
+          this.incIp(3)
         break
 
       case 7:  // LT pos pos
