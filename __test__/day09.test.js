@@ -17,51 +17,6 @@ describe('VM regression tests', () => {
       vm.run()
     })
   })
-
-  describe('Larger example', () => {
-    const data = [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
-      1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
-      999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99]
-
-    test('Less than 8', (done) => {
-      function output(value) {
-        expect(value).toEqual(999)
-        done()
-      }
-
-      function input() {
-        return 7
-      }
-
-      new VM(data.slice(0), input, output).run()
-    })
-
-    test('Equal to 8', (done) => {
-      function output(value) {
-        expect(value).toEqual(1000)
-        done()
-      }
-
-      function input() {
-        return 8
-      }
-
-      new VM(data.slice(0), input, output).run()
-    })
-
-    test('Greater than 8', (done) => {
-      function output(value) {
-        expect(value).toEqual(1001)
-        done()
-      }
-
-      function input() {
-        return 9
-      }
-
-      new VM(data.slice(0), input, output).run()
-    })
-  })
 })
 
 describe('Step functions', () => {

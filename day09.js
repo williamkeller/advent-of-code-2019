@@ -197,8 +197,8 @@ export class VM {
         break
 
       case 5:  // JT pos pos
-        if(this._data[this._data[this._ip + 1]] != 0)
-          this.setIp(this._data[this._data[this._ip + 2]])
+        if(this.pos(1) != 0)
+          this.setIp(this.pos(2))
         else
           this.incIp(3)
         break
@@ -240,20 +240,20 @@ export class VM {
           this.incIp(3)
         break
       case 106:  // JF imm pos
-        if(this._data[this._ip + 1] == 0)
-          this._ip = this._data[this._data[this._ip + 2]]
+        if(this.imm(1) == 0)
+          this.setIp(this.pos(2))
         else
           this.incIp(3)
         break
       case 1006:  // JF pos imm
-        if(this._data[this._data[this._ip + 1]] == 0)
-          this._ip = this._data[this._ip + 2]
+        if(this.pos(1) == 0)
+          this.setIp(this.imm(2))
         else
           this.incIp(3)
         break
       case 1106:  // JF imm imm
-        if(this._data[this._ip + 1] == 0)
-          this._ip = this._data[this._ip + 2]
+        if(this.imm(1) == 0)
+          this.setIp(this.imm(2))
         else
           this.incIp(3)
         break
@@ -270,32 +270,32 @@ export class VM {
           this.incIp(3)
         break
 
-      case 7:  // LT pos pos
-        if(this._data[this._data[this._ip + 1]] < this._data[this._data[this._ip + 2]])
-          this._data[this._data[this._ip + 3]] = 1
+      case 7:  // LT pos pos pos
+        if(this.pos(1) < this.pos(2))
+          this.setDataPos(3, 1)
         else
-          this._data[this._data[this._ip + 3]] = 0
+          this.setDataPos(3, 0)
         this._ip += 4
         break
       case 107:  // LT imm pos
-        if(this._data[this._ip + 1] < this._data[this._data[this._ip + 2]])
-          this._data[this._data[this._ip + 3]] = 1
+        if(this.imm(1) < this.pos(2))
+          this.setDataPos(3, 1)
         else
-          this._data[this._data[this._ip + 3]] = 0
+          this.setDataPos(3, 2)
         this._ip += 4
         break
-      case 1007:  // LT pos imm
-        if(this._data[this._data[this._ip + 1]] < this._data[this._ip + 2])
-          this._data[this._data[this._ip + 3]] = 1
+      case 1007:  // LT pos imm pos
+        if(this.pos(1) < this.imm(2))
+          this.setDataPos(3, 1)
         else 
-          this._data[this._data[this._ip + 3]] = 0
+          this.setDataPos(3, 0)
         this._ip += 4
         break
-      case 1107:  // LT imm imm
-        if(this._data[this._ip + 1] < this._data[this._ip + 2])
-          this._data[this._data[this._ip + 3]] = 1
+      case 1107:  // LT imm imm pos
+        if(this.imm(1) < this.imm(2))
+          this.setDataPos(3, 1)
         else 
-          this._data[this._data[this._ip + 3]] = 0
+          this.setDataPos(3, 0)
         this._ip += 4
         break
       case 1207:  // rel imm pos
@@ -321,31 +321,31 @@ export class VM {
         break
 
       case 8:  // EQ pos pos pos
-        if(this._data[this._data[this._ip + 1]] == this._data[this._data[this._ip + 2]])
-          this._data[this._data[this._ip + 3]] = 1
+        if(this.pos(1) == this.pos(2))
+          this.setDataPos(3, 1)
         else 
-          this._data[this._data[this._ip + 3]] = 0
+          this.setDataPos(3, 0)
         this._ip += 4
         break
       case 108:  // EQ imm pos pos
-        if(this._data[this._ip + 1] == this._data[this._data[this._ip + 2]])
-          this._data[this._data[this._ip + 3]] = 1
+        if(this.imm(1) == this.pos(2))
+          this.setDataPos(3, 1)
         else 
-          this._data[this._data[this._ip + 3]] = 0
+          this.setDataPos(3, 0)
         this._ip += 4
         break
       case 1008:  // EQ pos imm pos
-        if(this._data[this._data[this._ip + 1]] == this._data[this._ip + 2])
-          this._data[this._data[this._ip + 3]] = 1
+        if(this.pos(1) == this.imm(2))
+          this.setDataPos(3, 1)
         else
-          this._data[this._data[this._ip + 3]] = 0
+          this.setDataPos(3, 0)
         this._ip += 4
         break
       case 1108:  // EQ imm imm pos
-        if(this._data[this._ip + 1] == this._data[this._ip + 2])
-          this._data[this._data[this._ip + 3]] = 1
+        if(this.imm(1) == this.imm(2))
+          this.setDataPos(3, 1)
         else
-          this._data[this._data[this._ip + 3]] = 0
+          this.setDataPos(3, 0)
         this._ip += 4
         break
       case 1208:  // rel imm  pos
@@ -363,7 +363,7 @@ export class VM {
         this.incIp(4)
         break
       case 21108:  // imm imm rel
-        if(this._data[this._ip + 1] == this._data[this._ip + 2])
+        if(this.imm(1) == this.imm(2))
           this.setDataRel(3, 1)
         else
           this.setDataRel(3, 0)
